@@ -5,6 +5,7 @@ import { debounce, showNotification } from './utils/helpers';
 import ItemCard from './components/ItemCard';
 import ItemForm from './components/ItemForm';
 import DataManager from './components/DataManager';
+import LocationManager from './components/LocationManager';
 
 function App() {
   const [items, setItems] = useState([]);
@@ -16,6 +17,7 @@ function App() {
   const [showDataManager, setShowDataManager] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [showLocationManager, setShowLocationManager] = useState(false);
 
   // 初始化PWA
   useEffect(() => {
@@ -174,6 +176,13 @@ function App() {
                 ⚙️
               </button>
               <button
+                onClick={() => setShowLocationManager(!showLocationManager)}
+                className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                title="位置管理"
+              >
+                📍
+              </button>
+              <button
                 onClick={() => setShowForm(true)}
                 className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 title="添加物品"
@@ -189,6 +198,11 @@ function App() {
         {/* 数据管理器 */}
         {showDataManager && (
           <DataManager onDataChange={handleDataChange} />
+        )}
+
+        {/* 位置管理器 */}
+        {showLocationManager && (
+          <LocationManager onClose={() => setShowLocationManager(false)} />
         )}
 
         {/* 搜索栏 */}

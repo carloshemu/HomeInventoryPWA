@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { fileUtils, showNotification } from '../utils/helpers';
+import { LocationService } from '../services/database';
 
 const ItemForm = ({ item, onSave, onCancel, categories = [], show, onClose }) => {
   const [formData, setFormData] = useState({
@@ -12,6 +13,9 @@ const ItemForm = ({ item, onSave, onCancel, categories = [], show, onClose }) =>
   });
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [allLocations, setAllLocations] = useState([]);
+  const [area, setArea] = useState('');
+  const [place, setPlace] = useState('');
 
   useEffect(() => {
     if (item) {
@@ -36,17 +40,28 @@ const ItemForm = ({ item, onSave, onCancel, categories = [], show, onClose }) =>
     };
   }, [show]);
 
+  useEffect(() => {
+    LocationService.getAllLocations().then(setAllLocations);
+  }, []);
+
+  useEffect(() => {
+    if (item && item.location && typeof item.location === 'object') {
+      setArea(item.location.area || '');
+      setPlace(item.location.place || '');
+    } else {
+      setArea('');
+      setPlace('');
+    }
+  }, [item]);
+
   const validateForm = () => {
     const newErrors = {};
-    
     if (!formData.name.trim()) {
       newErrors.name = '物品名称不能为空';
     }
-    
-    if (!formData.location.trim()) {
+    if (!area || !place) {
       newErrors.location = '存放位置不能为空';
     }
-    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -100,13 +115,24 @@ const ItemForm = ({ item, onSave, onCancel, categories = [], show, onClose }) =>
     }
   };
 
+  const handleAreaChange = (e) => {
+    setArea(e.target.value);
+    setPlace(''); // 切换区域时重置位置
+  };
+  const handlePlaceChange = (e) => {
+    setPlace(e.target.value);
+  };
+
   const handleSubmit = async () => {
     if (!validateForm()) {
       return;
     }
     setIsLoading(true);
     try {
-      await onSave(formData);
+      await onSave({
+        ...formData,
+        location: { area, place },
+      });
       showNotification(item ? '物品更新成功' : '物品添加成功', 'success');
     } catch (error) {
       showNotification(error.message || '操作失败', 'error');
@@ -121,6 +147,10 @@ const ItemForm = ({ item, onSave, onCancel, categories = [], show, onClose }) =>
       photoUrl: ''
     }));
   };
+
+  // 过滤出所有区域和当前区域下的位置
+  const areaOptions = Array.from(new Set(allLocations.map(l => l.area)));
+  const placeOptions = allLocations.filter(l => l.area === area).map(l => l.place);
 
   if (!show) return null;
 
@@ -160,22 +190,34 @@ const ItemForm = ({ item, onSave, onCancel, categories = [], show, onClose }) =>
             <p className="text-red-500 text-sm mt-1">{errors.name}</p>
           )}
         </div>
-        {/* 存放位置 */}
+        {/* 存放位置（两级下拉） */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             存放位置 *
           </label>
-          <input
-            type="text"
-            name="location"
-            value={formData.location}
-            onChange={handleInputChange}
-            className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white ${
-              errors.location ? 'border-red-500' : 'border-gray-300'
-            }`}
-            placeholder="例如：客厅抽屉、卧室衣柜"
-            autoComplete="off"
-          />
+          <div className="flex gap-2">
+            <select
+              value={area}
+              onChange={handleAreaChange}
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+            >
+              <option value="">选择区域</option>
+              {areaOptions.map(a => (
+                <option key={a} value={a}>{a}</option>
+              ))}
+            </select>
+            <select
+              value={place}
+              onChange={handlePlaceChange}
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+              disabled={!area}
+            >
+              <option value="">选择位置</option>
+              {placeOptions.map(p => (
+                <option key={p} value={p}>{p}</option>
+              ))}
+            </select>
+          </div>
           {errors.location && (
             <p className="text-red-500 text-sm mt-1">{errors.location}</p>
           )}

@@ -18,7 +18,11 @@ const ItemCard = ({ item, onEdit, onDelete }) => {
           <div className="text-gray-600 mb-2">
             <div className="flex items-center gap-2">
               <span className="text-gray-500">📍</span>
-              <span>{item.location}</span>
+              <span>{
+                item.location && typeof item.location === 'object'
+                  ? `${item.location.area || ''}${item.location.area && item.location.place ? '-' : ''}${item.location.place || ''}`
+                  : item.location || ''
+              }</span>
             </div>
           </div>
           
