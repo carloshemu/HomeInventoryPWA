@@ -238,6 +238,20 @@ function App() {
           </div>
         )}
 
+        {/* 物品表单内嵌卡片，始终显示在物品列表之前 */}
+        {showForm && (
+          <div className="max-w-md mx-auto my-6">
+            <ItemForm
+              item={editingItem}
+              onSave={handleSaveItem}
+              onCancel={handleCloseForm}
+              categories={categories}
+              show={true}
+              onClose={handleCloseForm}
+            />
+          </div>
+        )}
+
         {/* 物品列表 */}
         <div className="space-y-4">
           {filteredItems.length === 0 ? (
@@ -282,16 +296,6 @@ function App() {
           </div>
         )}
       </div>
-
-      {/* 物品表单 */}
-      {showForm && (
-        <ItemForm
-          item={editingItem}
-          onSave={handleSaveItem}
-          onCancel={handleCloseForm}
-          categories={categories}
-        />
-      )}
     </div>
   );
 }
