@@ -151,7 +151,7 @@ function App() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
           <p className="text-gray-600">加载中...</p>
@@ -161,73 +161,73 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* 头部 */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-md mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-xl font-bold text-gray-800">🏠 家庭物品跟踪</h1>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setShowDataManager(!showDataManager)}
-                className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-                title="数据管理"
-              >
-                ⚙️
-              </button>
-              <button
-                onClick={() => setShowLocationManager(!showLocationManager)}
-                className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-                title="位置管理"
-              >
-                📍
-              </button>
-              <button
-                onClick={() => setShowForm(true)}
-                className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                title="添加物品"
-              >
-                ➕
-              </button>
+    <div className="min-h-screen bg-[#f5f5f5]">
+      {/* 头部大圆角卡片 */}
+      <header className="sticky top-0 z-10 bg-[#f7f7fa] pb-2">
+        <div className="max-w-md mx-auto px-2 pt-4">
+          <div className="rounded-3xl bg-white shadow-sm px-6 py-4 flex flex-col gap-4 border border-gray-100">
+            <div className="flex items-center justify-between">
+              <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                <span role="img" aria-label="home">🏠</span> 家庭物品跟踪
+              </h1>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setShowDataManager(!showDataManager)}
+                  className="p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+                  title="数据管理"
+                >
+                  ⚙️
+                </button>
+                <button
+                  onClick={() => setShowLocationManager(!showLocationManager)}
+                  className="p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+                  title="位置管理"
+                >
+                  📍
+                </button>
+                <button
+                  onClick={() => setShowForm(true)}
+                  className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
+                  title="添加物品"
+                >
+                  ➕
+                </button>
+              </div>
+            </div>
+            {/* 搜索栏 */}
+            <div className="w-full">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="搜索物品..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full px-4 py-3 pl-10 rounded-2xl border border-gray-200 bg-[#f7f7fa] shadow focus:outline-none focus:ring-2 focus:ring-blue-200 text-base"
+                />
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg">
+                  🔍
+                </span>
+              </div>
             </div>
           </div>
         </div>
       </header>
-
-      <div className="max-w-md mx-auto px-4 py-4">
+      <main className="max-w-md mx-auto px-2 pt-2 pb-8">
         {/* 数据管理器 */}
         {showDataManager && (
           <DataManager onDataChange={handleDataChange} />
         )}
-
         {/* 位置管理器 */}
         {showLocationManager && (
           <LocationManager onClose={() => setShowLocationManager(false)} />
         )}
-
-        {/* 搜索栏 */}
-        <div className="mb-4">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="搜索物品..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-              🔍
-            </span>
-          </div>
-        </div>
-
         {/* 分类过滤器 */}
         {categories.length > 0 && (
-          <div className="mb-4">
+          <div className="mb-4 mt-2">
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setSelectedCategory('')}
-                className={`px-3 py-1 rounded-full text-sm transition-colors ${
+                className={`px-3 py-1 rounded-full text-sm transition-colors font-medium ${
                   selectedCategory === '' 
                     ? 'bg-blue-600 text-white' 
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -239,7 +239,7 @@ function App() {
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
-                  className={`px-3 py-1 rounded-full text-sm transition-colors ${
+                  className={`px-3 py-1 rounded-full text-sm transition-colors font-medium ${
                     selectedCategory === category 
                       ? 'bg-blue-600 text-white' 
                       : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -251,10 +251,9 @@ function App() {
             </div>
           </div>
         )}
-
         {/* 物品表单内嵌卡片，始终显示在物品列表之前 */}
         {showForm && (
-          <div className="max-w-md mx-auto my-6">
+          <div className="my-6">
             <ItemForm
               item={editingItem}
               onSave={handleSaveItem}
@@ -265,9 +264,8 @@ function App() {
             />
           </div>
         )}
-
         {/* 物品列表 */}
-        <div className="space-y-4">
+        <div className="space-y-4 mt-2">
           {filteredItems.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-6xl mb-4">📦</div>
@@ -300,16 +298,16 @@ function App() {
             ))
           )}
         </div>
-
         {/* 统计信息 */}
         {items.length > 0 && (
-          <div className="mt-8 text-center text-sm text-gray-500">
+          <div className="mt-8 text-center text-sm text-gray-400">
             共 {items.length} 个物品
             {searchQuery && `，搜索到 ${filteredItems.length} 个结果`}
             {selectedCategory && `，分类 "${selectedCategory}" 下 ${filteredItems.length} 个物品`}
           </div>
         )}
-      </div>
+      </main>
+      <div className="rounded-2xl bg-white p-8">测试圆角</div>
     </div>
   );
 }
