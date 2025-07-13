@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
 import { fileUtils, showNotification } from '../utils/helpers';
 import { LocationService } from '../services/database';
 

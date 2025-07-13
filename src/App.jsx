@@ -307,7 +307,6 @@ function App() {
           </div>
         )}
       </main>
-      <div className="rounded-2xl bg-white p-8">测试圆角</div>
     </div>
   );
 }
