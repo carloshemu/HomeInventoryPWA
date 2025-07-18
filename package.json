@@ -2,6 +2,7 @@
   "name": "homeinventorypwa",
   "private": true,
   "version": "0.0.0",
+  "homepage": "https://carloshemu.github.io/HomeInventoryPWA",
   "type": "module",
   "scripts": {
     "dev": "vite",
