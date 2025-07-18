@@ -2,7 +2,7 @@
   "name": "家庭物品跟踪系统",
   "short_name": "物品跟踪",
   "description": "轻量级家庭物品位置管理应用",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#f8fafc",
   "theme_color": "#3b82f6",
